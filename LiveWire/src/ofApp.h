@@ -3,52 +3,53 @@
 #include "ofMain.h"
 #include "ofxOpenCv.h"
 #include "ofxGui.h"
+#include "ofxFlowTools.h"
+
+#define USE_PROGRAMMABLE_GL
+
+using namespace flowTools;
 
 class ofApp : public ofBaseApp{
     
 public:
+    //functions
     void setup();
     void update();
     void draw();
-    
     void keyPressed(int key);
-    void keyReleased(int key);
-    void mouseMoved(int x, int y );
-    void mouseDragged(int x, int y, int button);
-    void mousePressed(int x, int y, int button);
-    void mouseReleased(int x, int y, int button);
-    void windowResized(int w, int h);
-    void dragEvent(ofDragInfo dragInfo);
-    void gotMessage(ofMessage msg);
     
+    //audio functions
+    void audioIn(float * input, int bufferSize, int nChannels);
+    
+    //base variables
+    bool drawPoint;//booean for telling the program to draw the point when it finds something
+    vector <ofPoint> blobCenters;   //ofPoints vector for our Blob centroids
+    int maxBlobs;   //number of blobs allowed to track
+
+    //webcam/ video stuff
     ofVideoGrabber grabber; //VideoGrabber for cam input
     
+    //OpenCV variables
     ofxCvColorImage image;      //CV ColorImage for our cam input
     ofxCvGrayscaleImage greyImage;  //CV GreyscaleImage for conversion of our cam
     ofxCvGrayscaleImage greyBackground; //CV GreyscaleImage to store the background
-    ofxCvGrayscaleImage greyDiff;       //CV GreyscaleImage to store the difference between the greyImage and greyBackground aka bk removal
+    ofxCvGrayscaleImage greyDiff;       //CV GreyscaleImage to store the difference between the greyImage and greyBackground
     ofxCvGrayscaleImage greyProcessed;  //CV GreyscaleImage that is preprocessed prior to blob detection
-    
-    bool learnBackground;   //bool to set whether or not to look for a new background plate
-    void bkToggler();       //function to toggle the background
-    
     ofxCvContourFinder contourFinder;   //object for handling contour finding aka blobs
+    ofPoint blobLocation;
     
-    /*
-    //GUI Stuff
-    ofxPanel gui;           //ofxPanel object for gui objects
-    ofxButton lBKButton;    //learn background Button
-    ofxToggle showProcessed;    //toggle to show our RGB or Processed Image
-    ofxToggle blurToggle;   //toggle for blur
-    ofxIntSlider blurSlider;    //slider to control our blur amount
-    ofxToggle errodeToggle;     //errosion toggle
-    ofxToggle dilateToggle; //toggle dilation
-    ofxToggle threshToggle;     //thresholding toggle
-    ofxIntSlider threshSlider;  //slider for setting threshold amount
+    //visuals
+        
+    //Audio and FFT stuff
+    ofSoundStream micInput;
     
-    bool guiStatus;     //bool to toggle the gui draw
-     */
+    //vector <float> left;
+    vector <float> audioFreq;
+    vector <float> volHistory;
+    float smoothedVol;
+    float scaledVol;
+    int bufferCounter;
+    int 	drawCounter;
     
-    vector <ofPoint> blobCenters;   //ofPoints vector for our Blob centroids
-    int maxBlobs;   //maximum number of blobs
+
 };
