@@ -3,11 +3,7 @@
 #include "ofMain.h"
 #include "ofxOpenCv.h"
 #include "ofxGui.h"
-#include "ofxFlowTools.h"
-
-#define USE_PROGRAMMABLE_GL
-
-using namespace flowTools;
+#include "particle.h"
 
 class ofApp : public ofBaseApp{
     
@@ -16,7 +12,6 @@ public:
     void setup();
     void update();
     void draw();
-    void keyPressed(int key);
     
     //audio functions
     void audioIn(float * input, int bufferSize, int nChannels);
@@ -38,18 +33,41 @@ public:
     ofxCvContourFinder contourFinder;   //object for handling contour finding aka blobs
     ofPoint blobLocation;
     
-    //visuals
-        
-    //Audio and FFT stuff
-    ofSoundStream micInput;
+    //VISUALS BEGIN///////////////////////////////////////////////////////////////////////////////////////
+
+    //FBO object
+    ofFbo screenFbo;
     
-    //vector <float> left;
+    //visuals setup
+    void checkParticles();
+    void createParticles();
+    void createAlphaTrail();
+    public: ofPoint particleLoc;
+    int particleR;
+    int particleG;
+    int particleB;
+    int maxParticles;
+    int fboTimer;
+    
+    // physics forces
+    ofPoint wind;//of Point for wind
+    ofPoint gravity;//of point for gravity
+    
+    //vectors
+    vector<particle> particles;
+    //VISUALS END////////////////////////////////////////////////////////////////////////////////////////
+    
+    //Audio and FFT stuff///////////////////////////////////////////////////////////////////////////////
+    
+    void checkFreq();
+    ofSoundStream micInput;
     vector <float> audioFreq;
     vector <float> volHistory;
     float smoothedVol;
     float scaledVol;
+    int scaledVolInt;
     int bufferCounter;
-    int 	drawCounter;
-    
+    int drawCounter;
+    //Audio and FFT end////////////////////////////////////////////////////////////////////////////////
 
 };
